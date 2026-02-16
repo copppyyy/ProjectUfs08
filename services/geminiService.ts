@@ -1,8 +1,6 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { QuoteProposal, Consultant } from '../types';
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
-
 // Data pools for random generation
 const firstNames = ["Marco", "Giulia", "Alessandro", "Francesca", "Luca", "Sofia", "Matteo", "Chiara", "Davide", "Elena", "Lorenzo", "Sara", "Simone", "Valentina"];
 const lastNames = ["Rossi", "Bianchi", "Ferrari", "Esposito", "Ricci", "Marino", "Greco", "Bruno", "Gallo", "Conti", "De Luca", "Costa", "Rizzo", "Lombardi"];
@@ -44,10 +42,8 @@ export const generateSmartQuote = async (
   infrastructureDescription: string
 ): Promise<QuoteProposal> => {
   
-  if (!process.env.API_KEY) {
-    console.warn("No API_KEY found. Returning mock data.");
-    return mockQuoteResponse(companyName);
-  }
+  // Fix: Use process.env.API_KEY directly as per guidelines
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
   try {
     const prompt = `
@@ -126,9 +122,8 @@ export const sendChatToSalesAI = async (
     proposalContext: QuoteProposal
 ): Promise<string> => {
     
-    if (!process.env.API_KEY) {
-        return "Sono un'AI dimostrativa (API Key mancante). Posso dirti che la tua strategia " + proposalContext.suggestedStrategy.substring(0, 20) + "... è ottima!";
-    }
+    // Fix: Use process.env.API_KEY directly as per guidelines
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
     try {
         const systemInstruction = `
